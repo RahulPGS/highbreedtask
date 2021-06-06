@@ -47,7 +47,7 @@ The page provides a dropdown that allows users to select app store or playstore.
 
 After selecting the store the required input fields for the app will appear and upon entering the details the user can hit get details of the app if the details are valid.
 
-##### App store
+#### App store
 
 For app store the input fields for the name and id of the app will appear.
 
@@ -58,7 +58,7 @@ for the app Spotify the app store url is
  [https://apps.apple.com/us/app/spotify-discover-new-music/id324684580]()
 
 the name will be **spotify-discover-new-music** and the id will be **324684580**
-##### Play store
+#### Play store
 For play store the input field for package name of the app will appear.
  
  for the app Spotify the play store url is
@@ -80,6 +80,12 @@ You can visit the keyword finder page by entering the below url in the browser a
 This app takes a URL and fetch the keyword, description and og:description content and display them to the user.
 
 A input field will be provided in the page where the user can enter the URL.
+
+Whenever a valid URL is posted to the keyword finder app then the fetched details will get saved in a model mapped to its respected URL. If the current url is previously fetched then the existing model object details will get updated with the freshly fetched details.
+
+#### Recommended URLS and Keywords:
+
+For any entered URL a query will run on the model to retrieve the objects on which more then 3 same keywords exists. The rest of the keywords and URL from these existing objects will get displayed to the user.
 
 ## Exception Handling:
 
