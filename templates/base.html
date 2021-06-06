@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <link rel="stylesheet" href="https://unpkg.com/placeholder-loading/dist/css/placeholder-loading.min.css">
+    {% block title %}
+    {% endblock %}
+</head>
+<body>
+{% block content %}
+{% endblock content %}
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+function showWarning(){
+  $(".error-message").animate(
+      {
+        right: 0,
+      },
+      500,
+      function () {
+        $(this).delay(2000).fadeOut();
+        $(this).show();
+      }
+    );
+};
+</script>
+{% block scripts %}
+{% endblock %}
+</html>

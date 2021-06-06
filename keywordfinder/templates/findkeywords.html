@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title>Get kewywords from any URL</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="">
+    <section class="_bg-images-left">
+        <img src=" {% static 'keywordfinder/find.svg' %}" alt=""/>
+    </section>
+    <div class="container">
+      <div class="jumbotron" style="backdrop-filter: blur(8px);background: rgba(0, 191, 166, 0.7)">
+        <h1>Keyword finder</h1>
+        <p>Welcome to the keyword finder where you can get the keywords of meta tags for the given URL.</p>
+      </div>
+    </div>
+    <div class="row container mx-auto">
+        <div class="col-lg col-md-12 blur mb-3">
+            <p> Just enter your URL in the below input field.</p>
+              <p>After that getting the keywords is just a click away😃</p>
+            <div class="row my-2 ">
+                <div class="col-9">
+                    <form class="form" id="urlForm">
+                        {% csrf_token %}
+                        <input class="form-control" id="url">
+                    </form>
+                </div>
+                <div class="col-3">
+                    <button type="submit" class="btn btn-success form-control" id="submit" data-button-spinner="fetching the data">Fetch Keywords</button>
+                </div>
+            </div>
+        </div>
+        <div id="skeleton" class="col-lg-12 col-md-12 p-0 m-0 hide">
+            <div class="col-lg-12 col-md-12">
+                <div class="ph-item blur">
+                    <div class="title">Keywords</div>
+                    <div class="ph-col-12">
+                        <div class="ph-row">
+                            <div class="ph-col-2"></div>&nbsp
+                            <div class="ph-col-2"></div>&nbsp
+                            <div class="ph-col-2"></div>&nbsp
+                            <div class="ph-col-2"></div>&nbsp
+                            <div class="ph-col-2"></div>&nbsp
+                            <div class="ph-col-2"></div>&nbsp
+                            <div class="ph-col-2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12">
+                <div class="ph-item blur">
+                    <div class="title">Description</div>
+                    <div class="ph-col-12">
+                        <div class="ph-picture"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12">
+                <div class="ph-item blur">
+                    <div class="title">og:description</div>
+                    <div class="ph-col-12">
+                        <div class="ph-picture"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blur col-lg-12 col-md-12 card p-0 mb-2 hide" id="keywordData">
+            <div class="card-header">
+                meta: keyword
+              </div>
+            <div class="card-body">
+                <h5 class="card-title">Keywords</h5>
+                <div class="card-text mb-2" id="keywords"></div>
+                Recommended Keywords: <cite title="Source Title" id="recommendedKeywords"></cite><br>
+                <ul class="list-group" id="recommendedUrls">
+                    <li class="list-group-item list-group-item-success">Recommended URLs</li>
+                </ul>
+            </div>
+        </div>
+        <div class="blur col-lg-12 col-md-12 card p-0 mb-2 hide" id="descriptionData">
+            <div class="card-header">
+                meta: description
+              </div>
+            <div class="card-body">
+                <h5 class="card-title">Description</h5>
+                <div class="card-text" id="description"></div>
+            </div>
+        </div>
+        <div class="blur col-lg-12 col-md-12 card p-0 mb-2 hide" id="ogDescriptionData">
+            <div class="card-header">
+                meta: og:description
+              </div>
+            <div class="card-body">
+                <h5 class="card-title">og:Description</h5>
+                <div class="card-text" id="ogdescription"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="error-message" id="warningMessage"></div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+$("#urlForm").submit((e)=>{
+    e.preventDefault()
+    $('#submit').click()
+})
+
+// using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+
+$(function () {
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+});
+
+
+const enter_into_fetching_mode = () => {
+    var $this = $('#submit');
+    $this.data("ohtml", $this.html());
+    var nhtml = "<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> " + $("#submit").attr('data-button-spinner');
+    $this.html(nhtml);
+    $this.attr("disabled", true);
+    $('#skeleton').removeClass('hide')
+    $('#url').attr('readonly', true)
+    $('#keywordData').addClass('hide')
+    $('#descriptionData').addClass('hide')
+    $('#ogDescriptionData').addClass('hide')
+}
+
+const exit_from_fetching_mode = ()=>{
+    $('#skeleton').addClass('hide')
+    $('#submit').html($('#submit').data("ohtml"));
+    $('#submit').attr("disabled", false);
+    $('#url').attr('readonly', false)
+}
+
+$('#submit').click(()=>{
+    if ($('#url').val().match(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)){
+        get_keywords($('#url').val())
+        enter_into_fetching_mode()
+    }
+    else handleError('Enter a valid url')
+})
+
+const handleError = (ermsg)=>{
+    $('#warningMessage').html(ermsg)
+    showWarning()
+    exit_from_fetching_mode()
+}
+
+const setKeywords = (data)=>{
+    if (data.keywords)$('#keywords').html(data.keywords.join(', '))
+    else $('#keywords').html("No keywords found for the entered URL")
+    if (data.description)$("#description").html(data.description)
+    else $('#description').html("No description found for the entered URL")
+    if (data.ogdescription)$('#ogdescription').html(data.ogdescription)
+    else $('#ogdescription').html("No og:description found for the entered URL")
+    if (data.recommended_keywords)$("#recommendedKeywords").html(data.recommended_keywords.join(', '))
+    else $('#recommendedKeywords').html('No recommendations available')
+    $('#recommendedUrls').html('No URL recommendations available')
+    if (data.recommended_urls){
+        $('#recommendedUrls').html('<li class="list-group-item list-group-item-success">Recommended URLs</li>')
+        data.recommended_urls.forEach((ru)=>{
+            console.log(ru)
+            $('#recommendedUrls').append(`<li class="list-group-item"><a href='${ru}' target='_blank'>${ru}</a></li>`)
+        })
+    }
+    $('#keywordData').removeClass('hide')
+    $('#descriptionData').removeClass('hide')
+    $('#ogDescriptionData').removeClass('hide')
+    exit_from_fetching_mode()
+}
+
+const get_keywords = (url)=>{
+    $.ajax({
+        type: 'POST',
+        url: 'get_keywords',
+        data: {'url': url},
+        timeout: 60000,
+        success: (response)=>{
+            if (response.success)setKeywords(response)
+            else handleError("Unable to fetch data from the given URL")
+        },
+        error: (er)=>{
+            handleError("Unable to fetch details from given url")
+        },
+        fail: ()=>{
+            handleError("Unable to fetch details from given url")
+        }
+    })
+}
+</script>
+{% endblock %}

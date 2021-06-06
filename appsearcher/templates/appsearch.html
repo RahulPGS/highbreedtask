@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    <title>Search for any app</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="">
+    <section class="_bg-images-right">
+        <img src=" {% static 'appsearcher/searching.svg' %}" alt=""/>
+    </section>
+    <div class="container">
+      <div class="jumbotron" style="backdrop-filter: blur(8px);background: rgba(249, 168, 38, 0.7)">
+        <h1>App Seacher</h1>
+        <p>Welcome to the app searcher where you can get the details of apps in playstore and appstore.</p>
+      </div>
+    </div>
+    <div class="row container mx-auto">
+        <div class="col-lg col-md-12 blur mb-3">
+            <p> Just select your prefered store and enter the details.</p>
+              <p>After that getting the app details is just a click away😃</p>
+            <div class="form-group">
+                <label for="store">Select store:</label>
+                  <select class="form-control" id="store">
+                    <option disabled selected>Select store</option>
+                    <option value="appstore">App Store</option>
+                    <option value="playstore">Play store</option>
+                  </select>
+            </div>
+            <div class="form-group hide" id="playstore">
+                <label>Enter the package name of the play store app</label>
+                <input class="form-control" id="packageName">
+            </div>
+            <div class="form-group hide" id="appstore">
+                <label>Enter the name of the app store app</label>
+                <input class="form-control " id="name">
+                <label>Enter the id of the app store app</label>
+                <input class="form-control" id="id" type="number">
+            </div>
+            <button class="btn btn-warning form-control hide mb-2" id="getDetails" data-button-spinner="getting the app details!">Get details</button>
+            <p id="description" class="hide" style="bottom:20px"></p>
+        </div>
+        <div class="col-lg-5 col-md-12 hide" id="appSkeleton">
+            <div class="ph-item blur">
+                <div class="ph-col-12">
+                    <div class="ph-picture"></div>
+                    <div class="ph-row py-4">
+                        <div class="ph-col-6"></div>
+                        <div class="ph-col-6 empty"></div>
+                        <div class="ph-col-6"></div>
+                        <div class="ph-col-6 empty"></div>
+                        <div class="ph-col-6"></div>
+                        <div class="ph-col-6 empty"></div>
+                        <div class="ph-col-6"></div>
+                        <div class="ph-col-6 empty"></div>
+                        <div class="ph-col-6 big mx-auto"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-md-12 hide" id="appCard">
+            <div class="card blur">
+                  <div class="row">
+                      <div class="col"><img class="card-img-top card-img" src="{% static '/appsearcher/searching.svg' %}" alt="Card image cap" id="icon"></div>
+                      <div class="col"><h5 class="card-title mx-auto mt-5" id="appName">App name</h5></div>
+                  </div>
+                  <div class="card-body container mx-auto">
+                        <div class="row mx-auto pl-2">👨‍💻Developed  by &nbsp<span id="dev_name"></span></div>
+                        <div class="row mx-auto pl-2">🤳<span id="downloads"></span>&nbsp downloads</div>
+                        <div class="row mx-auto pl-2">🌟Rated &nbsp<span id="rating"></span>/5.0</div>
+                        <div class="row mx-auto pl-2">⭐<span id="ratings"></span>&nbsp ratings</div>
+                        <div class="row mx-auto pl-2 viewicon"><a href="" class='hide' id="viewplaystore"><img src="{% static 'appsearcher/playicon.jpg' %}" style="height:66px"></a></div>
+                        <div class="row mx-auto pl-2 viewicon"><a href="" class='hide' id="viewappstore"><img src="{% static 'appsearcher/appicon.png' %}" style="height:40px"></a></div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="error-message" id="warningMessage"></div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+let selected = null;
+$("#store").change(()=>{
+    $('#appstore').addClass('hide')
+    $('#playstore').addClass('hide')
+    $('#getDetails').removeClass('hide')
+    selected = $('#store').val()
+    $(`#${selected}`).removeClass('hide')
+})
+
+
+$('#getDetails').click(()=>{
+    $('#viewplaystore').addClass('hide')
+    $('#viewappstore').addClass('hide')
+    $('#appCard').addClass('hide')
+    $('#description').addClass("hide")
+    $(`#${selected}`).removeClass("has-error")
+    if (selected == 'appstore'){
+        if ($('#name').val() == ''){
+            $(`#${selected}`).addClass('has-error')
+            $('#warningMessage').html("Enter a valid app name")
+            showWarning();
+        }
+        else if (!String($("#id").val()).match(/^\d+$/)){
+            $(`#${selected}`).addClass('has-error')
+            $('#warningMessage').html("Enter a valid id")
+            showWarning();
+        }
+        else{
+              enter_into_getting_details_mode()
+              search_app_store($('#name').val(), $('#id').val())
+         }
+    }
+    else{
+         if($('#packageName').val() == '' || !$('#packageName').val().match(/^([A-Za-z]{1}[A-Za-z\d_]*\.)+[A-Za-z][A-Za-z\d_]*$/)){
+            $(`#${selected}`).addClass('has-error')
+            $('#warningMessage').html("Enter a valid package name")
+            showWarning();
+         }
+         else{
+            enter_into_getting_details_mode()
+            search_play_store($('#packageName').val())
+         }
+    }
+})
+
+
+const enter_into_getting_details_mode = () => {
+    var $this = $('#getDetails');
+    $this.data("ohtml", $this.html());
+    var nhtml = "<span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> " + $("#getDetails").attr('data-button-spinner');
+    $this.html(nhtml);
+    $this.attr("disabled", true);
+    $('#appSkeleton').removeClass('hide')
+    $('#name').attr('readonly', true)
+    $('#id').attr('readonly', true)
+    $('#packageName').attr('readonly', true)
+}
+
+const exit_from_getting_details_mode = ()=>{
+    $('#appSkeleton').addClass('hide')
+    $('#getDetails').html($('#getDetails').data("ohtml"));
+    $('#getDetails').attr("disabled", false);
+    $('#name').attr('readonly', false)
+    $('#id').attr('readonly', false)
+    $('#packageName').attr('readonly', false)
+}
+
+const search_app_store = (name, id) => {
+$.ajax({
+    type: 'GET',
+    url: `search_app_store/${name}/${id}`,
+    timeout: 40000,
+    success: function(response){
+        if (!response.success){
+            handleError(response)
+        }
+        else setData(response)
+    },
+    error: (er)=>{
+        handleError({error: "We are unable to establish connection with the server, Try again after some time"})
+     },
+    complete: ()=>{
+        exit_from_getting_details_mode()
+     },
+     fail: ()=>{
+        handleError({error: "We are unable to establish connection with the server, Try again after some time"})
+     }
+})
+}
+const search_play_store = (packageName) => {
+$.ajax({
+    type: 'GET',
+    url: `search_play_store/${packageName}`,
+    timeout: 40000,
+    success: function(response){
+        if (!response.success){
+            handleError(response)
+        }
+        else setData(response)
+    },
+    error: (er) => {
+        handleError({error: "We are unable to establish connection with the server, Try again after some time"})
+    },
+    complete: ()=>{
+        exit_from_getting_details_mode()
+     },
+     fail: ()=>{
+        handleError({error: "We are unable to establish connection with the server, Try again after some time"})
+     }
+})
+}
+
+const handleError = (response)=>{
+    $('#warningMessage').html(response.error)
+    showWarning()
+    $(`#${selected}`).addClass('has-error')
+}
+
+
+const setData = (response)=>{
+    $("#icon").attr('src', response.image);
+    $('#appName').text(response.name)
+    $('#dev_name').html(response.developer)
+    $('#downloads').html(response.downloads)
+    $('#ratings').html(response.ratings)
+    $('#rating').html(response.rating)
+    $('#description').removeClass('hide')
+    $('#description').text(response.description.concat('...'))
+    $(`#view${selected}`).attr('href', response.link)
+    $(`#view${selected}`).removeClass('hide')
+    $('#appCard').removeClass('hide')
+}
+
+</script>
+{% endblock %}

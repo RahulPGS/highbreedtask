@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Selection Page</title>
+
+    <link rel="stylesheet" href=" {% static 'main.css' %}">
+
+</head>
+<body>
+
+    <section class="_content">
+        <div class="left">
+            <h2 class="_main-title">
+                Welcome to the<br><span>HighBreed</span> Python and Django Task
+            </h2>
+            <div class="description">
+                <p>Submitted by Rahul Pinjarla.<br>Email ID: S160142@rgutksklm.ac.in</p>
+            </div>
+            <div class="description">Select your app</div>
+            <div class="selection">
+                <ul>
+                    <li><a href="/appsearch">App_Searcher</a></li>
+                    <li><a href="/findkeywords">Keyword_Finder</a></li>
+                </ul>
+            </div>
+            <div class="row cards">
+                <div class="col-md-6 my-2">
+                    <div class="card" style="min-height: 180px">
+                        <div class="card-header" style="background-color: gray">
+                        App #1
+                        </div>
+                        <div class="card-body">
+                        <h5 class="card-title">App searcher</h5>
+                        <p class="card-text">Get info about apps on the Apple App store or the Google Play store </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card my-2" style="min-height: 180px !important">
+                        <div class="card-header" style="background-color: gray">
+                        App #2
+                        </div>
+                        <div class="card-body">
+                        <h5 class="card-title">Keyword Finder</h5>
+                        <p class="card-text">Get the keywords, description and og:description for the given URL</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="right">
+            <div class="container">
+                <img src=" {% static 'icon.svg' %}" alt="Select Image">
+            </div>
+        </div>
+    </section>
+</body>
+</html>

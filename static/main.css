@@ -1,0 +1,405 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body
+{
+    min-height: 100vh;
+    background-color: #DFDFDF;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.cards{
+    position:absolute;
+}
+
+.logo_header
+{
+    position: relative;
+    width:100%;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    color: #111;
+    height: 70px;
+    background-color: #222E50;
+}
+
+.logo_header div
+{
+    position: relative;
+    text-align: center;
+    margin: 0 5px;
+    color: #fff;
+}
+
+.logo_header .left
+{
+    position: relative;
+    font-size: 14px;
+    letter-spacing: 1px;
+    font-weight: 500;
+    margin-right: 20px;
+}
+    .logo_header .left::before,
+    .logo_header .left::after
+    {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background: #fff;
+    }
+
+    .logo_header .left::before
+    {
+        top:-3px;
+        left: 0;
+    }
+
+    .logo_header .left::after
+    {
+        bottom: -3px;
+        left: 0;
+    }
+
+.logo_header .logo
+{
+    width:60px;
+    height: 50px;
+    align-items: center;
+}
+
+.logo_header .logo img
+{
+    width: 100%;
+    height: 100%;
+}
+
+.logo_header .right
+{
+    position: relative;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    margin-left: 20px;
+}
+    .logo_header .right::before, 
+    .logo_header .right::after
+    {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        background: #fff;
+    }
+    
+    .logo_header .right::before
+    {
+        top:-3px;
+        left: 0;
+    }
+
+    .logo_header .right::after
+    {
+        bottom: -3px;
+        left: 0;
+    }
+
+
+    section
+    {
+        width: 100%;
+        padding: 5px;
+    }
+
+    ._content
+    {
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    ._content .left ,
+    ._content .right
+    {
+        width:75%;
+        margin: 1% 2%;
+    }
+
+    ._content .left
+    {
+        margin-top: 10%;
+        margin-left: 5%;
+    }
+    ._content .left ._main-title
+    {
+        font-size: 32px;
+        letter-spacing:0.5px;
+        font-weight: 500;
+
+    }
+
+    ._content .left ._main-title span
+    {
+        font-size: 42px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        color:#1F2041;
+        transition: 0.2s ease;
+        padding: 2px;
+    }
+
+    ._content .left ._main-title span:hover
+    {
+        background: #222E50;
+        color: #fff;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+
+    ._content .left .description
+    {
+        position: relative;
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: 500;
+        font-family: sans-serif;
+        width: 70%;
+    }
+
+    ._content .left .selection
+    {
+        position: relative;
+        margin-top: 35px;
+        margin-bottom: 5%;
+    }
+
+    ._content .left .selection ul
+    {
+        display: flex;
+        width: 100%;
+    }
+
+    ._content .left .selection ul li
+    {
+        list-style: none;
+        margin-right: 15px;
+    }
+
+    ._content .left .selection ul li a
+    {
+        text-decoration: none;
+        font-size: 18px;
+        color: #111;
+        background: #fff;
+        padding: 12px 50px;
+        border-radius: 10px;
+        //font-weight: 600;
+        letter-spacing: 0.5px;
+        transition: 0.5s;
+        overflow: hidden;
+    }
+
+    ._content .left .selection ul li a:hover
+    {
+        background: #00B0FF;
+        color: #fff;
+        border: 0;
+    }
+    
+    ._content .back
+    {
+        position: relative;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: 0.4s ease;
+    }
+    ._content .back:hover
+    {
+        background: #222E50;
+        color: #fff;
+    }
+
+    ._content .right .container
+    {
+        position: relative;
+        width: 100%;
+        text-align: center;
+    }
+
+    .right .container img
+    {
+        width: 80%;
+        background-position: center;
+        background-size: cover;
+        opacity: 0.8;
+        cursor: pointer;
+        transition: 0.2s;
+        animation: moving ease-in-out 2s infinite alternate;
+        transform-origin: center;
+    }
+
+    ._content .right .container img:hover
+    {
+        opacity: 1;
+    }
+
+    @keyframes moving
+    {
+        0%
+        {
+            transform: translateY(-20px);
+        }
+
+        100%
+        {
+            transform:translateY(20px);
+        }
+    }
+
+
+
+
+/* Tab Responsive */
+
+@media (max-width:992px)
+{
+    .logo_header 
+    {
+        height: 50px;
+    }
+
+    .logo_header .left 
+    {
+        font-size: 12px;
+        letter-spacing: 0.5px;
+        margin-right: 10px;
+    }
+
+    .logo_header .logo 
+    {
+        width: 55px;
+        height: 40px;
+    }
+
+    section
+    {
+        padding: 10px;
+    }
+
+    ._content
+    {
+        align-items: center;
+        height: 80vh;
+        margin: 0;
+    }
+
+    ._content .left 
+    {
+        margin-top: 5%;
+    }
+
+    ._content .left ._main-title 
+    {
+        font-size: 28px;
+        letter-spacing: 0.3px;
+    }
+
+    .left ._main-title span 
+    {
+        font-size: 38px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    ._content .left .description 
+    {
+        margin-top: 15px;
+        width: 100%;
+    }
+
+}
+
+    /* Mobile responsive */
+@media (max-width:540px)
+{
+    .logo_header
+    {
+        height: 50px;
+        width: 100%;
+    }
+
+    .logo_header .left 
+    {
+        display: none;
+    }
+
+    .logo_header .right
+    {
+        font-size: 12px;
+        margin-left: 20px;
+    }
+    ._content 
+    {
+        position:relative;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    ._content .left,
+    ._content  .right
+    {
+        position: absolute;
+    }
+
+    ._content .left
+    {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content:start;
+        align-items: center;
+        z-index: 1;
+    }
+
+    ._content .left ._main-title 
+    {
+        font-size: 24px;
+        margin: 15% 2%;
+        text-align: center;
+        width: 100%;
+        word-wrap: break-word;
+    }
+    ._content .left ._main-title span
+    {
+        text-align: center;
+    }
+    ._content .left .description 
+    {
+        margin-top: 0px;
+        text-align: center;
+    }
+
+    ._content .right
+    {
+        width: 100%;
+        opacity: 0.3;
+        pointer-events: none;
+        padding: 5px;
+    }
+    .cards{
+        position: relative;
+    }
+}
