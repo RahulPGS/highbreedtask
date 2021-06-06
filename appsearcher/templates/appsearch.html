@@ -28,17 +28,19 @@
                     <option value="playstore">Play store</option>
                   </select>
             </div>
-            <div class="form-group hide" id="playstore">
-                <label>Enter the package name of the play store app</label>
-                <input class="form-control" id="packageName">
-            </div>
-            <div class="form-group hide" id="appstore">
-                <label>Enter the name of the app store app</label>
-                <input class="form-control " id="name">
-                <label>Enter the id of the app store app</label>
-                <input class="form-control" id="id" type="number">
-            </div>
-            <button class="btn btn-warning form-control hide mb-2" id="getDetails" data-button-spinner="getting the app details!">Get details</button>
+            <form>
+                <div class="form-group hide" id="playstore">
+                    <label>Enter the package name of the play store app</label>
+                    <input class="form-control" id="packageName">
+                </div>
+                <div class="form-group hide" id="appstore">
+                    <label>Enter the name of the app store app</label>
+                    <input class="form-control " id="name">
+                    <label>Enter the id of the app store app</label>
+                    <input class="form-control" id="id" type="number">
+                </div>
+            <button class="btn btn-warning form-control hide mb-2" id="getDetails" data-button-spinner="getting the app info!" type="submit">Get info</button>
+            </form>
             <p id="description" class="hide" style="bottom:20px"></p>
         </div>
         <div class="col-lg-5 col-md-12 hide" id="appSkeleton">
@@ -82,6 +84,13 @@
 
 {% block scripts %}
 <script>
+
+$('form').submit((e)=>{
+    e.preventDefault()
+    $('#getDetails').click()
+})
+
+
 let selected = null;
 $("#store").change(()=>{
     $('#appstore').addClass('hide')
@@ -156,6 +165,7 @@ $.ajax({
     timeout: 40000,
     success: function(response){
         if (!response.success){
+            console.log(response.detailed_error)
             handleError(response)
         }
         else setData(response)

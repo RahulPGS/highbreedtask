@@ -57,7 +57,7 @@ def get_app_details_from_app_store(name, id):
                   'developer': developer, 'downloads': downloads, 'link': link}, safe=False)
     except Exception as e:
         print("in error")
-        return JsonResponse({'success': False, 'error': 'Error while retrieving information from the URL'}, safe=False)
+        return JsonResponse({'success': False, 'error': 'Error while retrieving information from the URL', 'detailed_error': str(e)}, safe=False)
 
 
 def get_app_details_from_play_store(package_name):
@@ -90,7 +90,7 @@ def get_app_details_from_play_store(package_name):
             safe=False)
     except Exception as e:
         print("in error")
-        return JsonResponse({'success': False, 'error': 'App not found with given details'}, safe=False)
+        return JsonResponse({'success': False, 'error': 'App not found with given details', 'detailed_error': str(e)}, safe=False)
 
 
 def search_app(res, name, id=None):

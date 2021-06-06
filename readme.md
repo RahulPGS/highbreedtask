@@ -57,17 +57,38 @@ for the app Spotify the app store url is
  
  [https://apps.apple.com/us/app/spotify-discover-new-music/id324684580]()
 
-the name will be **spotify-discover-new-music** and the id will be **324684580**
+so the name will be **spotify-discover-new-music** and the id will be **324684580**.
 #### Play store
 For play store the input field for package name of the app will appear.
+
+Example:
  
  for the app Spotify the play store url is
  
  [https://play.google.com/store/apps/details?id=com.spotify.music]()
  
-the package name will be **com.spotify.music**
+so the package name will be **com.spotify.music**.
 
-Enter these details in the appeared input field(s) to get the app details.
+Find these details for your required app and enter them in the appeared input field(s) to get the app details.
+
+After the Get info button is clicked the below details of the app store or play store app will be displayed to the user.
+
+- App icon.
+
+- App name.
+
+- Developer Name.
+
+- Description up to 200 characters, the rest will get replaced with trailing dots(...).
+
+- No. of downloads (Note: App store won't provide us this data).
+
+- App Rating.
+
+- No.of ratings/reviews.
+
+- Link to the actual web page of the app.
+
 
 #### App \#2
 
@@ -81,15 +102,30 @@ This app takes a URL and fetch the keyword, description and og:description conte
 
 A input field will be provided in the page where the user can enter the URL.
 
+After the fetch keywords button is clicked (i.e the form gets submitted) the below data from the meta tags of the web page will be displayed to the user.
+
+- keywords
+    - Recommended Keywords
+    - Recommended URLs
+
+- description
+
+- og:description
+
 Whenever a valid URL is posted to the keyword finder app then the fetched details will get saved in a model mapped to its respected URL. If the current url is previously fetched then the existing model object details will get updated with the freshly fetched details.
 
 #### Recommended URLS and Keywords:
 
 For any entered URL a query will run on the model to retrieve the objects on which more then 3 same keywords exists. The rest of the keywords and URL from these existing objects will get displayed to the user.
 
+
+## Disabling submits:
+
+Whenever a submit happens on any form on any of the two apps the input fields and the submit button will stay disabled until a response is received from the server.
+
 ## Exception Handling:
 
-If any error occur while fetching the details from the url in both the pages then a error message will appear on the page for 2 seconds stating where the error occurred.
+If any error occur while fetching the details from the url in both the apps then an error message will appear on the page for 2 seconds stating where the error occurred.
 
 ## Validations:
 
