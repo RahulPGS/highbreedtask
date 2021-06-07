@@ -2,7 +2,7 @@
 
 Submitted by _**Rahul Pinjarla**_ , _S160142@rguktsklm.ac.in_
 
-Two start the project open command prompt into the project directory.
+To start the project open command prompt into the project directory.
 The directory is the folder where the manage.py is located.
 
 Then open any virtual env if you are an virtual env user.
