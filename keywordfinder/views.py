@@ -87,8 +87,9 @@ def get_keywords(res):
             options.add_experimental_option('excludeSwitches', ['enable-automation'])
             browser = webdriver.Chrome(settings.CHROME_DRIVER_PATH, options=options)
         except Exceprion as e:
+            print(str(e))
             return JsonResponse(
-                data={'success': False, 'error': 'An error occured with your chrome driver', 'detailed_error': str(e)},
+                data={'success': False, 'error': 'An error occured with your chrome driver',},
                 safe=False)
         try:
             browser.get(url)
@@ -106,24 +107,29 @@ def get_keywords(res):
             og_description = og_description['content'] if og_description else False
             recommended_keywords = []
             recommended_urls = []
-            keywords = [keyword.replace(" ", '') for keyword in keywords] if keywords else False
+            # If there are any keywords then we will search for similar keywords in existing uls
             if keywords:
+                keywords = [keyword.replace(" ", '') for keyword in keywords]
                 for url_obj in URLKeywords.objects.all():
-                    if url_obj.url == url:
+                    if url_obj.url == url:  # If the current url already exists then we don't need to compare it
                         continue
-                    url_keywords = json.loads(url_obj.keywords)
+                    url_keywords = json.loads(url_obj.keywords)  # Taking the existing url keywords to a list
                     if url_keywords:
+                        # If the matching keywords are greater than 3
                         if len(np.intersect1d(url_keywords, keywords)) > 3:
+                            # We will add the remaining keywords to the recommended_keywords
                             recommended_keywords += list(np.setdiff1d(url_keywords, keywords))
+                            # And the existing url to recommended URLs
                             recommended_urls.append(url_obj.url)
             try:
-                url_obj = URLKeywords.objects.get(url=url)
-            except URLKeywords.DoesNotExist:
+                url_obj = URLKeywords.objects.get(url=url)  # If this URL already exists in the database we get that
+            except URLKeywords.DoesNotExist:  # If it does not exist then we will create new one
                 url_obj = URLKeywords()
                 url_obj.url = url
+            # Assign the freshly fetched data to it
             url_obj.keywords = json.dumps(keywords)
-            url_obj.description = description
-            url_obj.og_description = og_description
+            url_obj.description = description if description else 'No description found'
+            url_obj.og_description = og_description if og_description else 'No og:description found'
             url_obj.save()
             recommended_keywords = recommended_keywords if recommended_keywords else False
             recommended_urls = recommended_urls if recommended_urls else False

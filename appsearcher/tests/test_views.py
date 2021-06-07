@@ -1,8 +1,16 @@
 from django.test import TestCase, Client
 from django.urls import reverse
+import json
 
 
 # python manage.py test appsearcher
+
+def assertJsonIsIn(actual_one, args):
+    for arg in args:
+        if json.dumps(arg) == actual_one:
+            return True
+    return False
+
 
 class TestView(TestCase):
 
@@ -32,12 +40,12 @@ class TestView(TestCase):
 
         self.assertEquals(app_store_response_valid_name_id_pattern.status_code, 200)
 
-        self.assertJSONEqual(
-            str(app_store_response_valid_name_id_pattern.content, encoding='utf8'),
-            {"success": False, "error": "There is a problem with the URL", "detailed_error": "404 Client Error: Not Found for url: https://apps.apple.com/in/app/name/id55"}
-        )
+        self.assertTrue(assertJsonIsIn(
+            str(app_store_response_valid_name_id_pattern.content, encoding='utf8'), [{"success": False, "error": "There is a problem with the URL"},
+               {'success': False, 'error': 'Check your internet connection and try again'}]))
 
-        app_store_response_valid_name_id = client.get(reverse('search_app_store', args=('spotify-discover-new-music', 324684580)))
+        app_store_response_valid_name_id = client.get(
+            reverse('search_app_store', args=('spotify-discover-new-music', 324684580)))
 
         self.assertEquals(app_store_response_valid_name_id.status_code, 200)
 
@@ -53,16 +61,18 @@ class TestView(TestCase):
             {'success': False, 'error': 'Enter a valid package name'}
         )
 
-        play_store_response_valid_package_pattern = client.get(reverse('search_play_store', args=('valid.test.pattern',)))
+        play_store_response_valid_package_pattern = client.get(
+            reverse('search_play_store', args=('valid.test.pattern',)))
 
         self.assertEquals(play_store_response_valid_package_pattern.status_code, 200)
 
-        self.assertJSONEqual(
-            str(play_store_response_valid_package_pattern.content, encoding='utf8'),
-            {"success": False, "error": "There is a problem with the URL", "detailed_error": "404 Client Error: Not Found for url: https://play.google.com/store/apps/details?id=valid.test.pattern"}
+        self.assertTrue(
+            assertJsonIsIn(str(play_store_response_valid_package_pattern.content, encoding='utf8'),
+            [{"success": False, "error": "There is a problem with the URL"},
+             {'success': False, 'error': 'Check your internet connection and try again'}]
+        ))
 
-        )
-
-        play_store_response_valid_package_name = client.get(reverse('search_play_store', args=('com.instagram.android',)))
+        play_store_response_valid_package_name = client.get(
+            reverse('search_play_store', args=('com.instagram.android',)))
 
         self.assertEquals(play_store_response_valid_package_name.status_code, 200)

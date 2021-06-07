@@ -4,29 +4,35 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
-
 # Create your views here.
 
 """
 
 In this views.py we will take the required details of an app and fetch its details from its web page.
 
+API
 We are using JsonResponse to make the API as this is a simple app which just returns the app details. 
 
+GETTING PAGE CONTENT
 We will be using requests package as it is enough to get the content from the playstore and appstore web pages as they \
 don't rely on Javascript to load the page content.
 
+PARSING
 Then we will get the content and pass it to beautifulsoup and get its html parser and then use it to find our required \
 elements.
 
+EXCEPTION HANDLING
 While handling exceptions we will set the success in the JsonResponse to False to let the front end know that an error\
 occurred and handle it.
 
 If there are no errors then the success will be True and then the Jquery in the template can set the details of the app\
 in the page.
 
+PACKAGE_NAME_VALIDATION
 Package name and name validations are also implemented in the frontend(in JQuery) and the backend(in the below code).
 """
+
+
 def get_app_details_from_app_store(name, id):
     # name = 'spotify-discover-new-music'
     # id = '324684580'
@@ -38,8 +44,14 @@ def get_app_details_from_app_store(name, id):
         req_link = requests.get(link)
         req_link.raise_for_status()
     except requests.exceptions.HTTPError as e:
-        return JsonResponse({'success': False, 'error': 'There is a problem with the URL', 'detailed_error': str(e)},
+        return JsonResponse({'success': False, 'error': 'There is a problem with the URL'},
                             safe=False)
+
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        return JsonResponse(
+            {'success': False, 'error': 'Check your internet connection and try again'},
+            safe=False)
     try:
         soup = BeautifulSoup(req_link.content, 'html.parser')
         title = soup.find('h1', attrs={'class': 'product-header__title app-header__title'}).contents[0].strip()
@@ -56,8 +68,10 @@ def get_app_details_from_app_store(name, id):
                   'description': description,
                   'developer': developer, 'downloads': downloads, 'link': link}, safe=False)
     except Exception as e:
-        print("in error")
-        return JsonResponse({'success': False, 'error': 'Error while retrieving information from the URL', 'detailed_error': str(e)}, safe=False)
+        print(e)
+        return JsonResponse(
+            {'success': False, 'error': 'Error while retrieving information from the URL'},
+            safe=False)
 
 
 def get_app_details_from_play_store(package_name):
@@ -70,8 +84,15 @@ def get_app_details_from_play_store(package_name):
         req_link = requests.get(link)
         req_link.raise_for_status()
     except requests.exceptions.HTTPError as e:
-        return JsonResponse({'success': False, 'error': 'There is a problem with the URL', 'detailed_error': str(e)},
+        print(e)
+        return JsonResponse({'success': False, 'error': 'There is a problem with the URL'},
                             safe=False)
+
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        return JsonResponse(
+            {'success': False, 'error': 'Check your internet connection and try again'},
+            safe=False)
     try:
         soup = BeautifulSoup(req_link.content,
                              'html.parser')
@@ -89,8 +110,9 @@ def get_app_details_from_play_store(package_name):
                   'rating': rating, 'downloads': downloads, 'developer': developer, 'link': link},
             safe=False)
     except Exception as e:
-        print("in error")
-        return JsonResponse({'success': False, 'error': 'App not found with given details', 'detailed_error': str(e)}, safe=False)
+        print(e)
+        return JsonResponse({'success': False, 'error': 'App not found with given details'},
+                            safe=False)
 
 
 def search_app(res, name, id=None):
